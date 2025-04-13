@@ -38,7 +38,7 @@ public class SecurityConfig {
                             "/swagger-ui.html",
                             "/webjars/**"
                     ).permitAll();
-                    registry.anyRequest().hasRole("ADMIN");
+                    registry.anyRequest().authenticated();
                 })
                 .authenticationProvider(authenticationManagerConfig.authenticationProvider())
                 .build();
