@@ -1,13 +1,15 @@
 package com.reservation.hotel.model;
 
+import com.reservation.reservation.model.Reservation;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Setter
+@Getter
 @NoArgsConstructor
 public class Room {
     @Id
@@ -30,4 +32,35 @@ public class Room {
 
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
+
+    public boolean isAvailable() {
+        return status == RoomStatus.AVAILABLE;
+    }
+
+    public boolean isReserved() {
+        return status == RoomStatus.RESERVED;
+    }
+
+    public void reserve() {
+        status = RoomStatus.RESERVED;
+    }
+
+    public void changeToAvailable() {
+        this.status = RoomStatus.AVAILABLE;
+    }
+
+    public void changeToUnavailable() {
+        this.status = RoomStatus.UNAVAILABLE;
+    }
+
+    public void changePricePerDay(Double pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
+    }
 }
