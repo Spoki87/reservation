@@ -33,7 +33,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "rooms")
     private List<Reservation> reservations;
 
     public Room(String number, String description, RoomType type, Double pricePerDay, int capacity) {

@@ -7,6 +7,7 @@ import com.reservation.reservation.dto.response.ReservationShortResponse;
 import com.reservation.reservation.model.ReservationStatus;
 import lombok.Value;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,10 +23,12 @@ public class RoomResponse {
     List<ReservationShortResponse> reservations;
 
     public static RoomResponse from(Room room) {
-        List<ReservationShortResponse> activeReservations = room.getReservations().stream()
-                .filter(res -> res.getStatus() == ReservationStatus.CONFIRMED)
-                .map(ReservationShortResponse::from)
-                .toList();
+        List<ReservationShortResponse> activeReservations = (room.getReservations() != null ?
+                room.getReservations().stream()
+                        .filter(res -> res.getStatus() == ReservationStatus.CONFIRMED)
+                        .map(ReservationShortResponse::from)
+                        .toList() :
+                new ArrayList<>());
 
         return new RoomResponse(
                 room.getId(),
@@ -38,4 +41,5 @@ public class RoomResponse {
                 activeReservations
         );
     }
+
 }

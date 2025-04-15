@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handle(Exception ex) {
-        ex.printStackTrace(); // pokaże w logach
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Błąd: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getMessage());
     }
 }
