@@ -36,6 +36,15 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
+    public Room(String number, String description, RoomType type, Double pricePerDay, int capacity) {
+        this.number = number;
+        this.description = description;
+        this.type = type;
+        this.pricePerDay = pricePerDay;
+        this.capacity = capacity;
+        this.status = RoomStatus.AVAILABLE;
+    }
+
     public boolean isAvailable() {
         return status == RoomStatus.AVAILABLE;
     }
@@ -62,5 +71,16 @@ public class Room {
 
     public void changeDescription(String description) {
         this.description = description;
+    }
+
+    public void changeCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void changeNumber(String number) {
+        this.number = number;
+    }
+    public void changeType(RoomType type) {
+        this.type = type;
     }
 }
