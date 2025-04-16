@@ -1,15 +1,23 @@
 package com.reservation.reservation.dto.response;
 
 import com.reservation.reservation.model.Reservation;
+import lombok.Value;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
+@Value
 public class ReservationShortResponse {
-    private Long id;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
+    UUID id;
+    LocalDate checkInDate;
+    LocalDate checkOutDate;
 
     public static ReservationShortResponse from(Reservation reservation) {
-        return null; //to do
+
+        return new ReservationShortResponse(
+                reservation.getId(),
+                reservation.getCheckIn(),
+                reservation.getCheckOut()
+        );
     }
 }

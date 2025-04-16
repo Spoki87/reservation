@@ -23,7 +23,7 @@ public class Reservation {
     private ReservationStatus status;
 
     @Column(unique = true, nullable = false)
-    private String name;
+    private String firstName;
 
     @Column(unique = true, nullable = false)
     private String lastName;
