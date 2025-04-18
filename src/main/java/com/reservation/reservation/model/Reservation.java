@@ -17,7 +17,6 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationNumber;
 
     private LocalDate checkIn;
@@ -44,6 +43,11 @@ public class Reservation {
             inverseJoinColumns = @JoinColumn(name = "room_id")
     )
     private List<Room> rooms;
+
+    @PrePersist
+    public void generateReservationNumber() {
+        this.reservationNumber = System.currentTimeMillis();
+    }
 
     public Reservation(LocalDate checkIn, LocalDate checkOut, String firstName, String lastName, String email, String phone) {
         this.checkIn = checkIn;

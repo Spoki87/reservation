@@ -42,20 +42,8 @@ public class RoomService {
         return RoomResponse.from(room);
     }
 
-    public List<RoomResponse> getAvailableRooms(){
-        return roomRepository.findByStatus(RoomStatus.AVAILABLE).stream()
-                .map(RoomResponse::from)
-                .toList();
-    }
-
     public List<RoomResponse> getUnavailableRooms(){
         return roomRepository.findByStatusNot(RoomStatus.AVAILABLE).stream()
-                .map(RoomResponse::from)
-                .toList();
-    }
-
-    public List<RoomResponse> getAvailableRoomsByDates(LocalDate from, LocalDate to){
-        return roomRepository.findAvailableRoomsInDateRange(from,to).stream()
                 .map(RoomResponse::from)
                 .toList();
     }

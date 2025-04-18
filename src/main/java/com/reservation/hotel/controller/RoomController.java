@@ -8,6 +8,7 @@ import com.reservation.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,7 +17,8 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/rooms")
+@RequestMapping("/api/admin/rooms")
+@PreAuthorize("hasRole('ADMIN')")
 public class RoomController {
 
     private final RoomService roomService;
@@ -57,21 +59,9 @@ public class RoomController {
         return ResponseEntity.ok(Response.success("fetch successfully", response, HttpStatus.OK));
     }
 
-    @GetMapping("/available")
-    public ResponseEntity<Response<List<RoomResponse>>> getAvailableRooms() {
-        List<RoomResponse> response = roomService.getAvailableRooms();
-        return ResponseEntity.ok(Response.success("fetch successfully", response, HttpStatus.OK));
-    }
-
     @GetMapping("/unavailable")
     public ResponseEntity<Response<List<RoomResponse>>> getUnavailableRooms() {
         List<RoomResponse> response = roomService.getUnavailableRooms();
-        return ResponseEntity.ok(Response.success("fetch successfully", response, HttpStatus.OK));
-    }
-
-    @GetMapping("/available/by-dates")
-    public ResponseEntity<Response<List<RoomResponse>>> getAvailableRoomsByDates(@RequestParam("from") LocalDate from, @RequestParam("to") LocalDate to) {
-        List<RoomResponse> response = roomService.getAvailableRoomsByDates(from, to);
         return ResponseEntity.ok(Response.success("fetch successfully", response, HttpStatus.OK));
     }
 
