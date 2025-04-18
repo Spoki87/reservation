@@ -9,6 +9,7 @@ import java.util.UUID;
 @Value
 public class ReservationShortResponse {
     UUID id;
+    long reservationNumber;
     LocalDate checkInDate;
     LocalDate checkOutDate;
 
@@ -16,6 +17,7 @@ public class ReservationShortResponse {
 
         return new ReservationShortResponse(
                 reservation.getId(),
+                reservation.getReservationNumber(),
                 reservation.getCheckIn(),
                 reservation.getCheckOut()
         );

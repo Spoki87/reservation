@@ -29,7 +29,7 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
     List<Room> findAvailableRoomsInDateRange(LocalDate from, LocalDate to);
 
     @Query("""
-    SELECT DISTINCT r FROM Room r
+    SELECT r FROM Room r
     WHERE r.status != 'AVAILABLE'
     OR r IN (
         SELECT rr FROM Reservation res

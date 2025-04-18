@@ -1,10 +1,19 @@
 package com.reservation.reservation.service;
 
+import com.reservation.exception.domain.ResourceNotFoundException;
 import com.reservation.reservation.dto.request.CreateReservationRequest;
+import com.reservation.reservation.dto.request.UpdateReservationRequest;
 import com.reservation.reservation.dto.response.ReservationResponse;
+import com.reservation.reservation.model.Reservation;
+import com.reservation.reservation.model.ReservationStatus;
 import com.reservation.reservation.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +22,71 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     public ReservationResponse create(CreateReservationRequest createReservationRequest) {
-        return null;
+
+        Reservation reservation = new Reservation(
+                createReservationRequest.getCheckIn(),
+                createReservationRequest.getCheckOut(),
+                createReservationRequest.getFirstName(),
+                createReservationRequest.getLastName(),
+                createReservationRequest.getEmail(),
+                createReservationRequest.getPhone()
+        );
+
+        reservationRepository.save(reservation);
+
+        return ReservationResponse.from(reservation);
     }
+
+    public ReservationResponse findByReservationNumber(Long reservationNumber) {
+        Reservation reservation = reservationRepository.findByReservationNumber(reservationNumber)
+                .orElseThrow(ResourceNotFoundException::new);
+        return ReservationResponse.from(reservation);
+    }
+
+    public ReservationResponse findById(UUID id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::new);
+        return ReservationResponse.from(reservation);
+    }
+
+    public List<ReservationResponse> findAll() {
+        return reservationRepository.findAll().stream().map(ReservationResponse::from).toList();
+    }
+
+    public List<ReservationResponse> findByStatus(ReservationStatus status) {
+        return reservationRepository.findByStatus(status).stream().map(ReservationResponse::from).toList();
+    }
+
+    public List<ReservationResponse> findByDatesAndStatus(LocalDate from, LocalDate to, ReservationStatus status) {
+        return reservationRepository.findByDatesAndStatus(from,to,status).stream().map(ReservationResponse::from).toList();
+    }
+
+    @Transactional
+    public ReservationResponse updateReservationContactInformation(UUID id, UpdateReservationRequest request){
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::new);
+
+        reservation.changeContactInformation(
+                request.getFirstName(),
+                request.getLastName(),
+                request.getEmail(),
+                request.getPhone()
+        );
+        return ReservationResponse.from(reservation);
+    }
+
+    @Transactional
+    public void cancelReservationById(UUID id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(ResourceNotFoundException::new);
+        reservation.cancelReservation();
+    }
+
+    @Transactional
+    public void cancelReservationByNumber(long number) {
+        Reservation reservation = reservationRepository.findByReservationNumber(number)
+                .orElseThrow(ResourceNotFoundException::new);
+        reservation.cancelReservation();
+    }
+
 }

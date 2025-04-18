@@ -17,6 +17,9 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reservationNumber;
+
     private LocalDate checkIn;
     private LocalDate checkOut;
 
@@ -42,5 +45,25 @@ public class Reservation {
     )
     private List<Room> rooms;
 
+    public Reservation(LocalDate checkIn, LocalDate checkOut, String firstName, String lastName, String email, String phone) {
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.status= ReservationStatus.CONFIRMED;
+    }
+
+    public void changeContactInformation(String firstName, String lastName, String email, String phone){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+    }
+
+    public void cancelReservation() {
+        this.status = ReservationStatus.CANCELLED;
+    }
 
 }
