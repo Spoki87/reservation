@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservation Confirmation</title>
+</head>
+<body>
+<h2>Hello <span th:text="${firstName} + ' ' + ${lastName}">Name</span>,</h2>
+<p>Your reservation <strong>#<span th:text="${reservationNumber}">123</span></strong> is confirmed.</p>
+<p><strong>Check-in:</strong> <span th:text="${checkIn}"></span></p>
+<p><strong>Check-out:</strong> <span th:text="${checkOut}"></span></p>
+<p><strong>Rooms:</strong></p>
+<ul>
+    <li th:each="room : ${rooms}" th:text="${room}">Room</li>
+</ul>
+<p>Thank you for choosing us!</p>
+</body>
+</html>

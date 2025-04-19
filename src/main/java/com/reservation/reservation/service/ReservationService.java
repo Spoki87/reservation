@@ -1,6 +1,9 @@
 package com.reservation.reservation.service;
 
+import com.reservation.email.EmailSender;
 import com.reservation.exception.domain.ResourceNotFoundException;
+import com.reservation.hotel.model.Room;
+import com.reservation.reservation.ReservationEmailTemplateBuilder;
 import com.reservation.reservation.dto.request.CreateReservationRequest;
 import com.reservation.reservation.dto.response.ReservationResponse;
 import com.reservation.reservation.model.Reservation;
@@ -15,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationEmailTemplateBuilder reservationEmailTemplateBuilder;
+    private final EmailSender emailSender;
+    private final ReservationEventProducer reservationEventProducer;
 
     public ReservationResponse create(CreateReservationRequest createReservationRequest) {
 
@@ -28,6 +34,18 @@ public class ReservationService {
         );
 
         reservationRepository.save(reservation);
+
+        String html = reservationEmailTemplateBuilder.buildConfirmationEmail(
+                reservation.getFirstName(),
+                reservation.getLastName(),
+                reservation.getReservationNumber(),
+                reservation.getCheckIn(),
+                reservation.getCheckOut(),
+                reservation.getRooms().stream().map(Room::getNumber).toList()
+        );
+
+        emailSender.send(reservation.getEmail(),html,"Reservation confirmation");
+        reservationEventProducer.sendReservationConfirmed(ReservationResponse.from(reservation));
 
         return ReservationResponse.from(reservation);
     }
@@ -43,6 +61,7 @@ public class ReservationService {
         Reservation reservation = reservationRepository.findByReservationNumber(number)
                 .orElseThrow(ResourceNotFoundException::new);
         reservation.cancelReservation();
+        reservationEventProducer.sendReservationCancelled(ReservationResponse.from(reservation));
     }
 
 }

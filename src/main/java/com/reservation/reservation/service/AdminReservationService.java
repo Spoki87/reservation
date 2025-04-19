@@ -1,6 +1,8 @@
 package com.reservation.reservation.service;
 
+import com.reservation.email.EmailSender;
 import com.reservation.exception.domain.ResourceNotFoundException;
+import com.reservation.reservation.ReservationEmailTemplateBuilder;
 import com.reservation.reservation.dto.request.UpdateReservationRequest;
 import com.reservation.reservation.dto.response.ReservationResponse;
 import com.reservation.reservation.model.Reservation;
@@ -18,6 +20,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminReservationService {
     private final ReservationRepository reservationRepository;
+    private final EmailSender emailSender;
+    private final ReservationEmailTemplateBuilder reservationEmailTemplateBuilder;
+    private final ReservationEventProducer reservationEventProducer;
 
     public ReservationResponse findById(UUID id) {
         Reservation reservation = reservationRepository.findById(id)
@@ -56,5 +61,13 @@ public class AdminReservationService {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
         reservation.cancelReservation();
+
+        String html = reservationEmailTemplateBuilder.buildCancellationEmail(
+                reservation.getFirstName(),
+                reservation.getReservationNumber()
+        );
+        emailSender.send(reservation.getEmail(),html,"Reservation cancelled");
+        reservationEventProducer.sendReservationCancelled(ReservationResponse.from(reservation));
+
     }
 }
