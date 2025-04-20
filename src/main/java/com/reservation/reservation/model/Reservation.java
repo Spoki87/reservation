@@ -49,13 +49,14 @@ public class Reservation {
         this.reservationNumber = System.currentTimeMillis();
     }
 
-    public Reservation(LocalDate checkIn, LocalDate checkOut, String firstName, String lastName, String email, String phone) {
+    public Reservation(LocalDate checkIn, LocalDate checkOut, String firstName, String lastName, String email, String phone,List<Room> rooms) {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+        this.rooms = rooms;
         this.status= ReservationStatus.CONFIRMED;
     }
 

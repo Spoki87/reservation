@@ -2,7 +2,9 @@ package com.reservation.reservation.service;
 
 import com.reservation.email.EmailSender;
 import com.reservation.exception.domain.ResourceNotFoundException;
+import com.reservation.exception.domain.RoomNotAvailableException;
 import com.reservation.hotel.model.Room;
+import com.reservation.hotel.repository.RoomRepository;
 import com.reservation.reservation.ReservationEmailTemplateBuilder;
 import com.reservation.reservation.dto.request.CreateReservationRequest;
 import com.reservation.reservation.dto.response.ReservationResponse;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +24,23 @@ public class ReservationService {
     private final ReservationEmailTemplateBuilder reservationEmailTemplateBuilder;
     private final EmailSender emailSender;
     private final ReservationEventProducer reservationEventProducer;
+    private final RoomRepository roomRepository;
 
     public ReservationResponse create(CreateReservationRequest createReservationRequest) {
+
+        List<Room> roomList = null;
+        for(int i=0;i<createReservationRequest.getRoomNumbers().size();i++){
+            Room room = roomRepository.findByNumber(createReservationRequest.getRoomNumbers().get(i))
+                    .orElseThrow(ResourceNotFoundException::new);
+            roomList.add(room);
+        }
+        
+        for(Room room : roomList){
+            List<Reservation> conflicts = reservationRepository.findOverlappingReservations(room.getId(),createReservationRequest.getCheckIn(),createReservationRequest.getCheckOut());
+            if(!conflicts.isEmpty()){
+                throw new RoomNotAvailableException(room);
+            }
+        }
 
         Reservation reservation = new Reservation(
                 createReservationRequest.getCheckIn(),
@@ -30,7 +48,8 @@ public class ReservationService {
                 createReservationRequest.getFirstName(),
                 createReservationRequest.getLastName(),
                 createReservationRequest.getEmail(),
-                createReservationRequest.getPhone()
+                createReservationRequest.getPhone(),
+                roomList
         );
 
         reservationRepository.save(reservation);
