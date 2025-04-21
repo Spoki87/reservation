@@ -24,7 +24,6 @@ Hotel booking system. It allows staff to manage reservations, hotel rooms using 
 
 ## 🚀 Getting Started
 
----
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file. 
