@@ -29,7 +29,7 @@ Hotel booking system. It allows staff to manage reservations, hotel rooms using 
 ```bash
 git clone git@github.com:Spoki87/reservation.git
 cd reservation
-mvn clean package -DskipTests
+mvn clean package 
 docker compose up
 ```
 ## 🛡️ Security
