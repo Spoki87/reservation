@@ -59,6 +59,12 @@ cd reservation
 mvn clean package 
 docker compose up
 ```
+
+When the program is launched, a user with super admin privileges is automatically added.
+`Username: SUPERADMIN`
+`email: example@example.pl`
+`Password: root`
+
 ## 🛡️ Security
 
 The application uses session-based authentication with JSESSIONID tokens managed by Spring Security. This allows secure user login and session persistence without relying on stateless JWT tokens.
