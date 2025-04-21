@@ -24,6 +24,34 @@ Hotel booking system. It allows staff to manage reservations, hotel rooms using 
 
 ## 🚀 Getting Started
 
+---
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file. 
+Default values ​​are already filled in. If you don't change the values, the program will build with predefined values.
+
+DATABASE:
+
+`DB_URL`
+`DB_USERNAME`
+`DB_PASSWORD`
+
+MAIL SMTP:
+
+`MAIL_HOST`
+`MAIL_PORT`
+`MAIL_USERNAME`
+`MAIL_PASSWORD`
+
+REDIS:
+
+`REDIS_HOST`
+`REDIS_PORT`
+
+KAFKA:
+
+`KAFKA_BOOTSTRAP_SERVERS`
+
 ### Clone and Run the Project
 
 ```bash
@@ -53,36 +81,6 @@ com.reservation
     ├──appuser
     ├──security          
 ```
-
----
-## Environment Variables
-
-To run this project, you will need to add the following environment variables to your .env file
-
-DATABASE:
-
-`DB_URL`
-`DB_USERNAME`
-`DB_PASSWORD`
-
-MAIL SMTP:
-
-`MAIL_HOST`
-`MAIL_PORT`
-`MAIL_USERNAME`
-`MAIL_PASSWORD`
-
-REDIS:
-
-`REDIS_HOST`
-`REDIS_PORT`
-
-KAFKA:
-
-`KAFKA_BOOTSTRAP_SERVERS`
-
-
-
 
 ## Example API Endpoints
 
