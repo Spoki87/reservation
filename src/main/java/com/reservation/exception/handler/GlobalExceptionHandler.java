@@ -45,12 +45,6 @@ public class GlobalExceptionHandler {
         return buildError("Duplicate entry error", HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Response<String>> handleOtherExceptions(Exception ex) {
-        System.out.println(ex.getMessage());
-        return buildError("Unexpected server error", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     private ResponseEntity<Response<String>> buildError(String message, HttpStatus status) {
         return ResponseEntity.status(status).body(Response.error(message, status));
     }
